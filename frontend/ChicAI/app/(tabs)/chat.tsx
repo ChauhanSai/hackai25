@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, FlatList, Text, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View, FlatList, Text, SafeAreaView, Animated } from 'react-native';
 import Svg, { Path, Circle, SvgProps } from "react-native-svg";
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -35,11 +35,37 @@ export default function ChatbotPage() {
   ]);
   const [input, setInput] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
+  const [isLoading, setIsLoading] = useState(false); // State for loading bubbles
+
+  const loadingAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isLoading) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(loadingAnimation, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(loadingAnimation, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      loadingAnimation.stopAnimation();
+    }
+  }, [isLoading]);
 
   const handleSend = async () => {
     if (input.trim()) {
       const userMessage = { id: Date.now().toString(), sender: 'user', text: input };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setInput(''); // Clear the input field immediately
+      setIsLoading(true); // Show loading bubbles
 
       try {
         const context = {
@@ -61,6 +87,8 @@ export default function ChatbotPage() {
 
         const data = await response.json();
         const dataJSON = JSON.parse(data);
+        console.log(data);
+        console.log(dataJSON);
 
         // Sanitize and trim the response
         const botMessageText =
@@ -74,9 +102,9 @@ export default function ChatbotPage() {
         console.error('Error communicating with chatbot:', error);
         const errorMessage = { id: (Date.now() + 2).toString(), sender: 'fritz', text: 'Sorry, something went wrong. Please try again.' };
         setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      } finally {
+        setIsLoading(false); // Hide loading bubbles
       }
-
-      setInput('');
     }
   };
 
@@ -88,6 +116,33 @@ export default function ChatbotPage() {
       ]}
     >
       <Text style={styles.messageText}>{item.text}</Text>
+    </View>
+  );
+
+  const renderLoadingBubbles = () => (
+    <View style={styles.loadingContainer}>
+      {[0, 1, 2].map((_, index) => (
+        <Animated.View
+          key={index}
+          style={[
+            styles.loadingBubble,
+            {
+              opacity: loadingAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.5, 1],
+              }),
+              transform: [
+                {
+                  scale: loadingAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 1.5],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+      ))}
     </View>
   );
 
@@ -119,6 +174,7 @@ export default function ChatbotPage() {
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.chatContainer}
           />
+          {isLoading && renderLoadingBubbles()}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -246,5 +302,18 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  loadingBubble: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#4361EE',
+    borderRadius: 5,
+    marginHorizontal: 5,
   },
 });

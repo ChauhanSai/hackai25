@@ -18,11 +18,8 @@ def chatbot(prompt, username="admin", context="{'user': [], 'fitz': []}"):
         print(chunk['message']['content'], end='', flush=True)
 
     print()
-    context = json.loads(context.replace("'", '"'))
-    context['user'].append(prompt)
-    context['fitz'].append(repr(response)[1:-1])
 
-    return "{\"response\": \"" + repr(response.replace("\"", "\'"))[1:-1] + "\", \"context\": \"" + repr(str(context).replace("\"", "\'"))[1:-1] + "\"}"
+    return "{\"response\": \"" + repr(response.replace("\"", "\'"))[1:-1] + "\"}"
 
 if __name__ == '__main__':
     prompt = "Hi!"

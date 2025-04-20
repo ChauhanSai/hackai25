@@ -14,6 +14,8 @@ def chatbot_endpoint():
     context = data.get('context', "{'user': [], 'fitz': []}")
     data = chatbot.chatbot(prompt, username, context)
 
+    print(data)
+
     return jsonify(data)
 
 if __name__ == '__main__':
