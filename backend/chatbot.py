@@ -1,7 +1,8 @@
 import ollama
 import json
 
-def chatbot(prompt, username = "admin", context = "{'user': [], 'fitz': []}"):
+def chatbot(prompt, username="admin", context="{'user': [], 'fitz': []}"):
+    print(str(context).replace("'", '"'))
     response = ""
     stream = ollama.chat(
         model='llama3.2',
@@ -21,7 +22,7 @@ def chatbot(prompt, username = "admin", context = "{'user': [], 'fitz': []}"):
     context['user'].append(prompt)
     context['fitz'].append(repr(response)[1:-1])
 
-    return "{'response': '" + response + "', 'context': " + str(context) + "}"
+    return "{\"response\": \"" + repr(response.replace("\"", "\'"))[1:-1] + "\", \"context\": \"" + repr(str(context).replace("\"", "\'"))[1:-1] + "\"}"
 
 if __name__ == '__main__':
     prompt = "Hi!"

@@ -36,13 +36,46 @@ export default function ChatbotPage() {
   const [input, setInput] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { id: Date.now().toString(), sender: 'user', text: input },
-        { id: (Date.now() + 1).toString(), sender: 'fritz', text: 'Thanks for your message!' },
-      ]);
+      const userMessage = { id: Date.now().toString(), sender: 'user', text: input };
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+      try {
+        const context = {
+          user: messages.filter(msg => msg.sender === 'user').map(msg => msg.text),
+          fitz: messages.filter(msg => msg.sender === 'fritz').map(msg => msg.text),
+        };
+
+        const response = await fetch("http://127.0.0.1:5000/chatbot", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            prompt: input, 
+            username: "user", 
+            context: JSON.stringify(context),
+          }),
+        });
+
+        const data = await response.json();
+        const dataJSON = JSON.parse(data);
+
+        // Sanitize and trim the response
+        const botMessageText =
+          dataJSON.response ||
+          "Sorry, I could not understand that. Please try again.";
+        console.log('Sanitized bot response:', botMessageText); // Log sanitized response
+
+        const botMessage = { id: (Date.now() + 1).toString(), sender: 'fritz', text: botMessageText };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      } catch (error) {
+        console.error('Error communicating with chatbot:', error);
+        const errorMessage = { id: (Date.now() + 2).toString(), sender: 'fritz', text: 'Sorry, something went wrong. Please try again.' };
+        setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      }
+
       setInput('');
     }
   };
