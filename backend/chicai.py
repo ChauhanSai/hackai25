@@ -72,7 +72,7 @@ def copilotDesigner(outfit):
 
         try:
             source_file = os.getcwd()[:os.getcwd().find("Desktop")] + "Downloads/Unknown.png"
-            destination_file = os.path.join("outfits/" + str(thisUUID) + "/" + key + ".png")
+            destination_file = os.path.join("backend/outfits/" + str(thisUUID) + "/" + key + ".png")
 
             shutil.move(source_file, destination_file)
 
@@ -81,6 +81,7 @@ def copilotDesigner(outfit):
             print(f"File not found")
         time.sleep(2)
 
+    shutil.move("backend/upload.jpg", "backend/outfits/" + str(thisUUID) + "/upload.jpg")
     clean()
 
 def imagetoText(type, image = "user.jpeg"):
@@ -108,8 +109,8 @@ def imagetoText(type, image = "user.jpeg"):
 
 if __name__ == '__main__':
     outfit = {
-        "top": imagetoText("top", "outfit3.jpg"),
-        "bottom": imagetoText("bottom", "outfit3.jpg")
+        "top": imagetoText("top", "upload.jpg"),
+        "bottom": imagetoText("bottom", "upload.jpg")
         # "shoes": imagetoText("shoes")
         # "outerwear": imagetoText("outerwear")
     }

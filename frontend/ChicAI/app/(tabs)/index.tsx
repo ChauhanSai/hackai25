@@ -75,25 +75,21 @@ export default function HomeScreen() {
     {
       id: 1,
       username: "minjlee",
-      image: "https://picsum.photos/300/200",
       color: "#43ee6e",
     },
     {
       id: 2,
       username: "allenzheng",
-      image: "https://picsum.photos/301/200",
       color: "#ee4343",
     },
     {
       id: 3,
       username: "inacheah",
-      image: "https://picsum.photos/302/200",
       color: "#eedd43",
     },
     {
       id: 4,
       username: "linhnguyen",
-      image: "https://picsum.photos/302/200",
       color: "#437cee",
     },
   ];
