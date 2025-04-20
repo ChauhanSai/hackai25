@@ -98,7 +98,7 @@ export default function HomeScreen() {
     },
   ];
 
-  const mockProfileImages = {
+  const mockProfileImages: { [key: number]: any } = {
     1: require('@/assets/images/profiles/user1.jpg'),
     2: require('@/assets/images/profiles/user2.jpg'),
     3: require('@/assets/images/profiles/user3.jpg'),
