@@ -4,7 +4,7 @@ import Svg, { Path, Circle, SvgProps } from "react-native-svg";
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-export function SolarQuestionCircleBold(props: SvgProps) {
+export function SolarQuestion(props: SvgProps) {
   return (
     <Svg
       width={props.width || "24"}
@@ -156,13 +156,15 @@ export default function ChatbotPage() {
               style={styles.dropdownButton}
               onPress={() => setDropdownVisible(!dropdownVisible)}
             >
-              <SolarQuestionCircleBold color="#FFFFFF" height={32} width={32} />
+              <SolarQuestion color="#FFFFFF" height={32} width={32} />
             </TouchableOpacity>
           </View>
           {dropdownVisible && (
             <View style={styles.dropdownOverlay}>
               <Text style={styles.dropdownText}>
-                Say hey to Fitz — your smart, stylish, and seriously supportive AI fashion assistant. Fitz is here to help you feel good, look good, and learn about your style along the way.
+                Say hey to Fitz — your smart, stylish, and seriously supportive
+                AI fashion assistant. Fitz is here to help you feel good, look
+                good, and learn about your style along the way.
               </Text>
             </View>
           )}
