@@ -31,7 +31,7 @@ export function SolarQuestionCircleBold(props: SvgProps) {
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([
-    { id: '1', sender: 'fritz', text: 'Hi! I am Fritz, your chatbot. How can I assist you today?' },
+    { id: '1', sender: 'fitz', text: 'Hi! I am Fitz, your chatbot. How can I assist you today?' },
   ]);
   const [input, setInput] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
@@ -70,7 +70,7 @@ export default function ChatbotPage() {
       try {
         const context = {
           user: messages.filter(msg => msg.sender === 'user').map(msg => msg.text),
-          fitz: messages.filter(msg => msg.sender === 'fritz').map(msg => msg.text),
+          fitz: messages.filter(msg => msg.sender === 'fitz').map(msg => msg.text),
         };
 
         const response = await fetch("http://127.0.0.1:5000/chatbot", {
@@ -87,8 +87,6 @@ export default function ChatbotPage() {
 
         const data = await response.json();
         const dataJSON = JSON.parse(data);
-        console.log(data);
-        console.log(dataJSON);
 
         // Sanitize and trim the response
         const botMessageText =
@@ -96,11 +94,11 @@ export default function ChatbotPage() {
           "Sorry, I could not understand that. Please try again.";
         console.log('Sanitized bot response:', botMessageText); // Log sanitized response
 
-        const botMessage = { id: (Date.now() + 1).toString(), sender: 'fritz', text: botMessageText };
+        const botMessage = { id: (Date.now() + 1).toString(), sender: 'fitz', text: botMessageText };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
       } catch (error) {
         console.error('Error communicating with chatbot:', error);
-        const errorMessage = { id: (Date.now() + 2).toString(), sender: 'fritz', text: 'Sorry, something went wrong. Please try again.' };
+        const errorMessage = { id: (Date.now() + 2).toString(), sender: 'fitz', text: 'Sorry, something went wrong. Please try again.' };
         setMessages((prevMessages) => [...prevMessages, errorMessage]);
       } finally {
         setIsLoading(false); // Hide loading bubbles
@@ -108,11 +106,11 @@ export default function ChatbotPage() {
     }
   };
 
-  const renderMessage = ({ item }) => (
+  const renderMessage = ({ item }: { item: { id: string; sender: string; text: string } }) => (
     <View
       style={[
         styles.messageBubble,
-        item.sender === 'fritz' ? styles.fritzBubble : styles.userBubble,
+        item.sender === 'fitz' ? styles.fitzBubble : styles.userBubble,
       ]}
     >
       <Text style={styles.messageText}>{item.text}</Text>
@@ -152,7 +150,7 @@ export default function ChatbotPage() {
         <ThemedView style={styles.container}>
           <View style={styles.titleContainer}>
             <ThemedText type="title" style={styles.title}>
-              Chat with Fritz
+              Chat with Fitz
             </ThemedText>
             <TouchableOpacity
               style={styles.dropdownButton}
@@ -261,7 +259,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     maxWidth: "75%",
   },
-  fritzBubble: {
+  fitzBubble: {
     backgroundColor: "#4361EE",
     alignSelf: "flex-start",
   },
