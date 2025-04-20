@@ -1,1 +1,2 @@
-# hackai25
+# Chic AI
+powered by Fitz, an AI Fashion Agent. 
