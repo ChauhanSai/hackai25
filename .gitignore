@@ -11,6 +11,7 @@
 .vscode/
 
 # Backend
-
+/backend/*.jpg
+/backend/*.jpeg
 
 # Frontend
